@@ -76,13 +76,14 @@ def get_mesh_laplacian_backup(
 
 # Setup
 torch.manual_seed(42)
-N = 100
-points = torch.rand(100, 2)
+N = 100000
+points = torch.rand(N, 2)
 N_LOOPS = int(1000000 / N)
 
 tri = Delaunay(points)
 
-pos = torch.concat([torch.tensor(tri.points), torch.zeros((tri.points.shape[0], 1))], dim=1)
+torch.set_default_device('cuda')
+pos = torch.concat([torch.tensor(tri.points), torch.rand((tri.points.shape[0], 1))], dim=1)
 face = torch.tensor(tri.simplices, dtype=torch.int64).T
 
 # Time all variants of the mesh laplacian
